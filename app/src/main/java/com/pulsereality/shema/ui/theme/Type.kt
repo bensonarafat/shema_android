@@ -21,6 +21,42 @@ val FjallaOneFontFamily = FontFamily(
     Font(R.font.fjallaone_regular, FontWeight.Normal)
 )
 
+// Exact 1:1 match with iOS Typography.swift
+object ShemaFonts {
+    val appLargeTitle = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Bold, fontSize = 34.sp)
+    val appDisplay = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.ExtraBold, fontSize = 28.sp)
+    val appTitle = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Medium, fontSize = 24.sp)
+    val appTitle2 = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 20.sp)
+    val streakCounter = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Black, fontSize = 48.sp)
+
+    val appHeadingTitle = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    val appHeadingSubTitle = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Medium, fontSize = 12.sp)
+
+    val appBody = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+    val appBodyRegular = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 14.sp)
+    val appBodySmall = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 12.sp)
+
+    val appSubheadline = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 14.sp)
+    val appFootnote = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 18.sp)
+    val appSubFootnote = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 13.sp)
+    val appCaption = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 12.sp)
+    val appCaptionBold = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
+    val appMicro = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 10.sp)
+
+    val appButtonPrimary = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.ExtraBold, fontSize = 24.sp)
+    val appButtonSecondary = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Medium, fontSize = 18.sp)
+    val appButtonSmall = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+
+    val app18Bold = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+    val app16Bold = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+    val app16SemiBold = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+    val app14Bold = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+    val app13SemiBold = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+
+    val bibleReaderFont = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.Normal, fontSize = 16.sp, lineHeight = 26.sp)
+    val bibleReaderNumber = TextStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.SemiBold, fontSize = 11.sp)
+}
+
 val ShemaTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = FjallaOneFontFamily,
@@ -43,76 +79,16 @@ val ShemaTypography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.5.sp
     ),
-    headlineLarge = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
-        lineHeight = 30.sp
-    ),
-    headlineMedium = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
-        lineHeight = 26.sp
-    ),
-    headlineSmall = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 18.sp,
-        lineHeight = 24.sp
-    ),
-    titleLarge = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
-        lineHeight = 24.sp
-    ),
-    titleMedium = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 16.sp,
-        lineHeight = 22.sp
-    ),
-    titleSmall = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
-    ),
-    bodyLarge = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp
-    ),
-    bodyMedium = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
-    ),
-    bodySmall = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp
-    ),
-    labelLarge = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
-    ),
-    labelMedium = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 12.sp,
-        lineHeight = 16.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = NunitoFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 14.sp
-    )
+    headlineLarge = ShemaFonts.appHeadingTitle,
+    headlineMedium = ShemaFonts.appTitle2,
+    headlineSmall = ShemaFonts.app18Bold,
+    titleLarge = ShemaFonts.app18Bold,
+    titleMedium = ShemaFonts.app16SemiBold,
+    titleSmall = ShemaFonts.app14Bold,
+    bodyLarge = ShemaFonts.bibleReaderFont,
+    bodyMedium = ShemaFonts.appBody,
+    bodySmall = ShemaFonts.appBodySmall,
+    labelLarge = ShemaFonts.appButtonSmall,
+    labelMedium = ShemaFonts.app13SemiBold,
+    labelSmall = ShemaFonts.appCaptionBold
 )

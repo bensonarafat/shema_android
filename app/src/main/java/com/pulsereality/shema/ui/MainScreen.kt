@@ -38,7 +38,7 @@ import com.pulsereality.shema.ui.screens.MeScreen
 import com.pulsereality.shema.ui.screens.PricingScreen
 import com.pulsereality.shema.ui.screens.WorshipPlayerScreen
 import com.pulsereality.shema.ui.screens.WorshipScreen
-import com.pulsereality.shema.ui.theme.BackgroundDark
+import com.pulsereality.shema.ui.theme.ShemaTheme
 import com.pulsereality.shema.ui.viewmodels.BibleViewModel
 import com.pulsereality.shema.ui.viewmodels.CommunityViewModel
 import com.pulsereality.shema.ui.viewmodels.DevotionUiState
@@ -71,15 +71,20 @@ fun MainScreen(
 
     val progress = if (duration > 0) (currentTime / duration).toFloat() else 0f
 
+    // In iOS: mini player is visible on Home, Worship, and Me tabs
+    val isMiniPlayerAllowedOnRoute = currentRoute == Screen.Home.route ||
+            currentRoute == Screen.Worship.route ||
+            currentRoute == Screen.Me.route
+
     Box(modifier = modifier.fillMaxSize()) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = BackgroundDark,
+            containerColor = ShemaTheme.colors.background,
             bottomBar = {
                 if (!isDevotionReaderOpen) {
                     Column {
-                        // Spotify-style Mini-Player floating above bottom nav
-                        if (currentHymn != null) {
+                        // Spotify-style Mini-Player floating above bottom nav (1:1 with iOS MainTabView)
+                        if (currentHymn != null && isMiniPlayerAllowedOnRoute) {
                             MiniPlayerBar(
                                 visible = true,
                                 title = currentHymn?.title ?: "",
@@ -88,6 +93,8 @@ fun MainScreen(
                                 isPlaying = isPlaying,
                                 progress = progress,
                                 onPlayPauseClick = { worshipViewModel.togglePlayPause() },
+                                onNextClick = { },
+                                onPreviousClick = { },
                                 onClick = { isFullPlayerPresented = true }
                             )
                         }
@@ -120,8 +127,45 @@ fun MainScreen(
                 ) {
                     composable(Screen.Home.route) {
                         HomeScreen(
+                            homeViewModel = homeViewModel,
                             onNavigateToDevotionStep = { step ->
                                 navController.navigate("devotion_reader/$step")
+                            },
+                            onPlayHymn = { hymn ->
+                                worshipViewModel.playHymn(hymn)
+                                isFullPlayerPresented = true
+                            },
+                            onNavigateToCommunity = {
+                                navController.navigate(Screen.Community.route)
+                            }
+                        )
+                    }
+
+                    composable(Screen.Bible.route) {
+                        BibleScreen(viewModel = bibleViewModel)
+                    }
+
+                    composable(Screen.Worship.route) {
+                        WorshipScreen(
+                            viewModel = worshipViewModel,
+                            onPlayHymn = { hymn ->
+                                worshipViewModel.playHymn(hymn)
+                                isFullPlayerPresented = true
+                            }
+                        )
+                    }
+
+                    composable(Screen.Community.route) {
+                        CommunityScreen(viewModel = communityViewModel)
+                    }
+
+                    composable(Screen.Me.route) {
+                        MeScreen(
+                            onNavigateToSettings = { settingKey ->
+                                navController.navigate(settingKey)
+                            },
+                            onUpgradeClick = {
+                                isPaywallPresented = true
                             }
                         )
                     }
@@ -135,7 +179,7 @@ fun MainScreen(
                         val step = backStackEntry.arguments?.getString("step") ?: "passage"
                         val stepIndex = when (step.lowercase()) {
                             "passage" -> 1
-                            "commentary" -> 2
+                            "devotional", "commentary" -> 2
                             "reflection" -> 3
                             "prayer" -> 4
                             else -> 1
@@ -154,52 +198,6 @@ fun MainScreen(
                                 }
                             )
                         }
-                    }
-
-                    composable(Screen.Worship.route) {
-                        WorshipScreen(
-                            onPlayHymn = { demoHymn ->
-                                val hymn = com.pulsereality.shema.data.model.Hymn(
-                                    id = demoHymn.id,
-                                    number = demoHymn.number,
-                                    title = demoHymn.title,
-                                    author = demoHymn.author,
-                                    category = demoHymn.category,
-                                    duration = 222.0,
-                                    lyrics = listOf(
-                                        com.pulsereality.shema.data.model.LyricLine("l1", 0.0, "Holy, holy, holy! Lord God Almighty!", 1),
-                                        com.pulsereality.shema.data.model.LyricLine("l2", 6.5, "Early in the morning our song shall rise to Thee;", 1),
-                                        com.pulsereality.shema.data.model.LyricLine("l3", 14.0, "Holy, holy, holy, merciful and mighty!", 1),
-                                        com.pulsereality.shema.data.model.LyricLine("l4", 21.5, "God in three Persons, blessed Trinity!", 1),
-                                        com.pulsereality.shema.data.model.LyricLine("l5", 30.0, "Holy, holy, holy! All the saints adore Thee,", 2),
-                                        com.pulsereality.shema.data.model.LyricLine("l6", 37.0, "Casting down their golden crowns around the glassy sea;", 2),
-                                        com.pulsereality.shema.data.model.LyricLine("l7", 45.0, "Cherubim and seraphim falling down before Thee,", 2),
-                                        com.pulsereality.shema.data.model.LyricLine("l8", 52.0, "Which wert, and art, and evermore shalt be.", 2)
-                                    )
-                                )
-                                worshipViewModel.playHymn(hymn)
-                                isFullPlayerPresented = true
-                            }
-                        )
-                    }
-
-                    composable(Screen.Bible.route) {
-                        BibleScreen(viewModel = bibleViewModel)
-                    }
-
-                    composable(Screen.Community.route) {
-                        CommunityScreen(viewModel = communityViewModel)
-                    }
-
-                    composable(Screen.Me.route) {
-                        MeScreen(
-                            onNavigateToSettings = { settingKey ->
-                                navController.navigate(settingKey)
-                            },
-                            onUpgradeClick = {
-                                isPaywallPresented = true
-                            }
-                        )
                     }
 
                     composable("focus_settings") {

@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,15 +24,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FormatSize
+import androidx.compose.material.icons.filled.Highlight
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,15 +51,8 @@ import androidx.compose.ui.unit.sp
 import com.pulsereality.shema.ui.components.BibleVerseActionPalette
 import com.pulsereality.shema.ui.components.BookSelectorBottomSheet
 import com.pulsereality.shema.ui.components.TranslationSelectorBottomSheet
-import com.pulsereality.shema.ui.theme.BackgroundDark
-import com.pulsereality.shema.ui.theme.BorderDark
-import com.pulsereality.shema.ui.theme.FjallaOneFontFamily
-import com.pulsereality.shema.ui.theme.PrimaryBlue
-import com.pulsereality.shema.ui.theme.SurfaceDark
-import com.pulsereality.shema.ui.theme.SurfaceSecondaryDark
-import com.pulsereality.shema.ui.theme.TextMutedDark
-import com.pulsereality.shema.ui.theme.TextPrimaryDark
-import com.pulsereality.shema.ui.theme.TextSecondaryDark
+import com.pulsereality.shema.ui.theme.ShemaFonts
+import com.pulsereality.shema.ui.theme.ShemaTheme
 import com.pulsereality.shema.ui.viewmodels.BibleViewModel
 
 @Composable
@@ -81,154 +75,200 @@ fun BibleScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundDark)
+            .background(ShemaTheme.colors.background)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.height(10.dp))
 
-            // MARK: - Top Navigation Bar
+            // MARK: BibleTopControls (1:1 with iOS BibleTopControls)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Book & Chapter Selector Button (Genesis 1)
+                // Left Pill: [ Book & Chapter | Search icon ]
                 Surface(
-                    modifier = Modifier.clickable { isBookSheetOpen = true },
-                    shape = RoundedCornerShape(14.dp),
-                    color = SurfaceDark,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, BorderDark)
+                    shape = RoundedCornerShape(8.dp),
+                    color = ShemaTheme.colors.tertiaryFill
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        modifier = Modifier
+                            .height(36.dp)
+                            .padding(horizontal = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "${selectedBook.name} $selectedChapter",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = TextPrimaryDark,
-                            fontWeight = FontWeight.Bold
+                            style = ShemaFonts.app14Bold,
+                            color = ShemaTheme.colors.textPrimary,
+                            modifier = Modifier
+                                .clickable { isBookSheetOpen = true }
+                                .padding(horizontal = 8.dp, vertical = 6.dp)
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Select Book & Chapter",
-                            tint = PrimaryBlue,
-                            modifier = Modifier.size(20.dp)
+
+                        Box(
+                            modifier = Modifier
+                                .width(1.dp)
+                                .height(18.dp)
+                                .background(ShemaTheme.colors.border)
                         )
+
+                        Box(
+                            modifier = Modifier
+                                .clickable { }
+                                .padding(horizontal = 8.dp, vertical = 6.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Search",
+                                tint = ShemaTheme.colors.textPrimary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
                 }
 
-                // Quick Previous / Next Chapter Buttons + Translation Badge
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(
-                        onClick = { viewModel.previousChapter() },
+                // Right Pill: [ AI Sparkles | Translation | Font Size | Highlighter ]
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = ShemaTheme.colors.tertiaryFill
+                ) {
+                    Row(
                         modifier = Modifier
-                            .size(34.dp)
-                            .clip(CircleShape)
-                            .background(SurfaceDark)
+                            .height(36.dp)
+                            .padding(horizontal = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.ChevronLeft,
-                            contentDescription = "Previous Chapter",
-                            tint = TextSecondaryDark,
-                            modifier = Modifier.size(20.dp)
+                        // AI Sparkles
+                        Box(
+                            modifier = Modifier
+                                .clickable { }
+                                .padding(horizontal = 6.dp, vertical = 6.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AutoAwesome,
+                                contentDescription = "Bible AI",
+                                tint = ShemaTheme.colors.textPrimary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .width(1.dp)
+                                .height(18.dp)
+                                .background(ShemaTheme.colors.border)
                         )
-                    }
 
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    IconButton(
-                        onClick = { viewModel.nextChapter() },
-                        modifier = Modifier
-                            .size(34.dp)
-                            .clip(CircleShape)
-                            .background(SurfaceDark)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ChevronRight,
-                            contentDescription = "Next Chapter",
-                            tint = TextSecondaryDark,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    // Translation Badge Pill (ESV / KJV / NLT)
-                    Surface(
-                        modifier = Modifier.clickable { isTranslationSheetOpen = true },
-                        shape = RoundedCornerShape(10.dp),
-                        color = PrimaryBlue.copy(alpha = 0.15f)
-                    ) {
+                        // Translation code
                         Text(
                             text = selectedTranslation,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = PrimaryBlue,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            style = ShemaFonts.app14Bold,
+                            color = ShemaTheme.colors.textPrimary,
+                            modifier = Modifier
+                                .clickable { isTranslationSheetOpen = true }
+                                .padding(horizontal = 8.dp, vertical = 6.dp)
                         )
+
+                        Box(
+                            modifier = Modifier
+                                .width(1.dp)
+                                .height(18.dp)
+                                .background(ShemaTheme.colors.border)
+                        )
+
+                        // Font size
+                        Box(
+                            modifier = Modifier
+                                .clickable { }
+                                .padding(horizontal = 6.dp, vertical = 6.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.FormatSize,
+                                contentDescription = "Font Size",
+                                tint = ShemaTheme.colors.textPrimary,
+                                modifier = Modifier.size(17.dp)
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .width(1.dp)
+                                .height(18.dp)
+                                .background(ShemaTheme.colors.border)
+                        )
+
+                        // Highlighter
+                        Box(
+                            modifier = Modifier
+                                .clickable { }
+                                .padding(horizontal = 6.dp, vertical = 6.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Highlight,
+                                contentDescription = "Highlights",
+                                tint = ShemaTheme.colors.textPrimary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // MARK: - Scripture Chapter Reader Pane
+            // MARK: Chapter Header & Verses Content (1:1 with iOS BibleChapterContent)
             if (isLoading && verses.isEmpty()) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f),
+                    modifier = Modifier.fillMaxSize().weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = PrimaryBlue)
+                    CircularProgressIndicator(color = ShemaTheme.colors.primary)
                 }
             } else {
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    modifier = Modifier.fillMaxSize().weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     // Chapter Title Header
                     item {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 14.dp),
+                                .padding(vertical = 12.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = selectedBook.name.uppercase(),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = PrimaryBlue,
-                                letterSpacing = 2.sp,
-                                fontWeight = FontWeight.Bold
+                                text = selectedBook.name,
+                                style = ShemaFonts.appFootnote,
+                                color = ShemaTheme.colors.textPrimary
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = "$selectedChapter",
-                                fontFamily = FjallaOneFontFamily,
-                                fontSize = 42.sp,
-                                color = TextPrimaryDark,
+                                style = ShemaFonts.appLargeTitle,
+                                color = ShemaTheme.colors.textPrimary,
                                 textAlign = TextAlign.Center
                             )
                         }
                     }
 
-                    // Verses
+                    // Verses List (1:1 with iOS BibleVerseView)
                     items(verses, key = { it.pk }) { verse ->
                         val isSelected = selectedVerses.contains(verse.pk)
                         val highlightColor = highlights[verse.pk]
 
                         val leadingBarColor by animateColorAsState(
                             targetValue = when {
-                                isSelected -> PrimaryBlue
+                                isSelected -> ShemaTheme.colors.primary
                                 highlightColor != null -> highlightColor
                                 else -> Color.Transparent
                             },
@@ -237,8 +277,8 @@ fun BibleScreen(
 
                         val verseBgColor by animateColorAsState(
                             targetValue = when {
-                                isSelected -> PrimaryBlue.copy(alpha = 0.12f)
-                                highlightColor != null -> highlightColor.copy(alpha = 0.15f)
+                                isSelected -> ShemaTheme.colors.primary.copy(alpha = 0.12f)
+                                highlightColor != null -> highlightColor.copy(alpha = 0.18f)
                                 else -> Color.Transparent
                             },
                             label = "verseBg"
@@ -247,47 +287,43 @@ fun BibleScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
+                                .clip(RoundedCornerShape(6.dp))
                                 .background(verseBgColor)
                                 .clickable { viewModel.toggleVerseSelection(verse.pk) }
-                                .padding(vertical = 6.dp, horizontal = 4.dp),
+                                .padding(horizontal = 8.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.Top
                         ) {
-                            // Highlight / Selection Leading Bar
+                            // Left selection/highlight bar (3dp width)
                             Box(
                                 modifier = Modifier
                                     .width(3.dp)
-                                    .height(24.dp)
+                                    .height(22.dp)
                                     .clip(RoundedCornerShape(2.dp))
                                     .background(leadingBarColor)
                             )
 
                             Spacer(modifier = Modifier.width(6.dp))
 
-                            // Verse Number
+                            // Verse number
                             Text(
                                 text = "${verse.verse}",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = if (isSelected) PrimaryBlue else TextMutedDark,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .width(26.dp)
-                                    .padding(top = 2.dp)
+                                style = ShemaFonts.bibleReaderNumber,
+                                color = if (isSelected) ShemaTheme.colors.primary else ShemaTheme.colors.textSecondary,
+                                modifier = Modifier.width(22.dp).padding(top = 2.dp)
                             )
 
-                            // Verse Text
+                            // Verse text
                             Text(
                                 text = verse.cleanText,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = TextPrimaryDark,
-                                lineHeight = 28.sp,
+                                style = ShemaFonts.bibleReaderFont,
+                                color = ShemaTheme.colors.textPrimary,
                                 modifier = Modifier.weight(1f)
                             )
                         }
                     }
 
                     item {
-                        Spacer(modifier = Modifier.height(100.dp))
+                        Spacer(modifier = Modifier.height(110.dp))
                     }
                 }
             }
@@ -304,7 +340,7 @@ fun BibleScreen(
                 .padding(bottom = 70.dp)
         )
 
-        // Book Selector Modal Bottom Sheet
+        // Modal Sheets
         if (isBookSheetOpen) {
             BookSelectorBottomSheet(
                 books = books,
@@ -317,7 +353,6 @@ fun BibleScreen(
             )
         }
 
-        // Translation Selector Modal Bottom Sheet
         if (isTranslationSheetOpen) {
             TranslationSelectorBottomSheet(
                 currentTranslation = selectedTranslation,

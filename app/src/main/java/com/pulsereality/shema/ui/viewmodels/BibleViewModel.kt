@@ -14,9 +14,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BibleViewModel(
-    application: Application,
-    private val bibleRepository: BibleRepository = DefaultBibleRepository(application)
+    application: Application
 ) : AndroidViewModel(application) {
+
+    private val bibleRepository: BibleRepository = DefaultBibleRepository(application)
 
     private val _books = MutableStateFlow<List<Book>>(emptyList())
     val books: StateFlow<List<Book>> = _books.asStateFlow()

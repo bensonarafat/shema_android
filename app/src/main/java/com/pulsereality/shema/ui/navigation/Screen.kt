@@ -3,14 +3,12 @@ package com.pulsereality.shema.ui.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.GraphicEq
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.LibraryMusic
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String) {
@@ -22,10 +20,10 @@ sealed class Screen(val route: String) {
     data object Onboarding : Screen("onboarding")
     data object Pricing : Screen("pricing")
 
-    // Main Tabs
+    // Main Tabs (matching iOS AppTabs)
     data object Home : Screen("tab_home")
-    data object Worship : Screen("tab_worship")
     data object Bible : Screen("tab_bible")
+    data object Worship : Screen("tab_worship")
     data object Community : Screen("tab_community")
     data object Me : Screen("tab_me")
 
@@ -44,7 +42,8 @@ enum class NavigationTab(
     val route: String,
     val title: String,
     val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
+    val unselectedIcon: ImageVector,
+    val isAvatar: Boolean = false
 ) {
     HOME(
         route = Screen.Home.route,
@@ -52,17 +51,17 @@ enum class NavigationTab(
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home
     ),
-    WORSHIP(
-        route = Screen.Worship.route,
-        title = "Worship",
-        selectedIcon = Icons.Filled.LibraryMusic,
-        unselectedIcon = Icons.Outlined.LibraryMusic
-    ),
     BIBLE(
         route = Screen.Bible.route,
         title = "Bible",
         selectedIcon = Icons.Filled.Book,
         unselectedIcon = Icons.Outlined.Book
+    ),
+    WORSHIP(
+        route = Screen.Worship.route,
+        title = "Worship",
+        selectedIcon = Icons.Filled.GraphicEq,
+        unselectedIcon = Icons.Outlined.GraphicEq
     ),
     COMMUNITY(
         route = Screen.Community.route,
@@ -73,8 +72,9 @@ enum class NavigationTab(
     ME(
         route = Screen.Me.route,
         title = "Me",
-        selectedIcon = Icons.Filled.Person,
-        unselectedIcon = Icons.Outlined.Person
+        selectedIcon = Icons.Filled.Home,
+        unselectedIcon = Icons.Outlined.Home,
+        isAvatar = true
     );
 
     companion object {

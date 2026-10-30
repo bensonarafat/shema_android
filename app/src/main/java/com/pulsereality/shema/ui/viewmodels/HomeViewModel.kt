@@ -28,6 +28,12 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow<DevotionUiState>(DevotionUiState.Loading)
     val uiState: StateFlow<DevotionUiState> = _uiState.asStateFlow()
 
+    private val _completedSteps = MutableStateFlow<Set<Int>>(setOf(1))
+    val completedSteps: StateFlow<Set<Int>> = _completedSteps.asStateFlow()
+
+    private val _streakDays = MutableStateFlow(7)
+    val streakDays: StateFlow<Int> = _streakDays.asStateFlow()
+
     init {
         loadTodayDevotion()
     }
@@ -40,7 +46,7 @@ class HomeViewModel(
                     _uiState.value = DevotionUiState.Success(
                         core = core,
                         locale = locale,
-                        completedSteps = setOf(1)
+                        completedSteps = _completedSteps.value
                     )
                 }
                 .onFailure { error ->
@@ -50,9 +56,14 @@ class HomeViewModel(
     }
 
     fun markStepCompleted(step: Int) {
+        _completedSteps.value = _completedSteps.value + step
         val current = _uiState.value
         if (current is DevotionUiState.Success) {
-            _uiState.value = current.copy(completedSteps = current.completedSteps + step)
+            _uiState.value = current.copy(completedSteps = _completedSteps.value)
         }
+    }
+
+    fun setStreakDays(days: Int) {
+        _streakDays.value = days
     }
 }

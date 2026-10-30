@@ -6,6 +6,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
@@ -14,7 +16,7 @@ import androidx.core.view.WindowCompat
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryBlue,
     onPrimary = TextPrimaryDark,
-    primaryContainer = PrimaryBlueSubtle,
+    primaryContainer = PrimaryBlueSubtleDark,
     onPrimaryContainer = PrimaryBlue,
     secondary = BrandGreen,
     onSecondary = BackgroundDark,
@@ -31,10 +33,10 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = PrimaryBlue,
-    onPrimary = TextPrimaryDark,
-    primaryContainer = PrimaryBlueSubtle,
+    onPrimary = TextPrimaryLight,
+    primaryContainer = PrimaryBlueSubtleLight,
     onPrimaryContainer = PrimaryBlue,
-    secondary = BrandGreenDark,
+    secondary = BrandGreen,
     onSecondary = SurfaceLight,
     background = BackgroundLight,
     onBackground = TextPrimaryLight,
@@ -47,12 +49,56 @@ private val LightColorScheme = lightColorScheme(
     onError = SurfaceLight
 )
 
+private val DarkExtendedColors = ExtendedColors(
+    primary = PrimaryBlue,
+    primarySubtle = PrimaryBlueSubtleDark,
+    background = BackgroundDark,
+    surface = SurfaceDark,
+    surfaceSecondary = SurfaceSecondaryDark,
+    tertiaryFill = TertiarySystemFillDark,
+    secondaryGroupedBg = SecondarySystemGroupedBgDark,
+    border = BorderDark,
+    textPrimary = TextPrimaryDark,
+    textSecondary = TextSecondaryDark,
+    textMuted = TextMutedDark,
+    gold = GoldAccent,
+    green = BrandGreen,
+    red = ErrorRed,
+    isDark = true
+)
+
+private val LightExtendedColors = ExtendedColors(
+    primary = PrimaryBlue,
+    primarySubtle = PrimaryBlueSubtleLight,
+    background = BackgroundLight,
+    surface = SurfaceLight,
+    surfaceSecondary = SurfaceSecondaryLight,
+    tertiaryFill = TertiarySystemFillLight,
+    secondaryGroupedBg = SecondarySystemGroupedBgLight,
+    border = BorderLight,
+    textPrimary = TextPrimaryLight,
+    textSecondary = TextSecondaryLight,
+    textMuted = TextMutedLight,
+    gold = GoldAccent,
+    green = BrandGreen,
+    red = ErrorRed,
+    isDark = false
+)
+
+object ShemaTheme {
+    val colors: ExtendedColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalExtendedColors.current
+}
+
 @Composable
 fun ShemaTheme(
-    darkTheme: Boolean = true, // Default to Shema's signature dark theme or follow system
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val extendedColors = if (darkTheme) DarkExtendedColors else LightExtendedColors
     val view = LocalView.current
 
     if (!view.isInEditMode) {
@@ -66,9 +112,11 @@ fun ShemaTheme(
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = ShemaTypography,
-        content = content
-    )
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = ShemaTypography,
+            content = content
+        )
+    }
 }
